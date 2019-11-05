@@ -1,11 +1,15 @@
 import { AnyAction, Reducer } from 'redux';
 
 import { EffectsCommandMap } from 'dva';
-import { fakeRegister } from './service';
+import { fakeRegister, fackCapcha } from './service';
 
 export interface StateType {
   status?: 'ok' | 'error';
   currentAuthority?: 'user' | 'guest' | 'admin';
+  errors: any;
+  statusCode: any;
+  msg: any;
+  data: any;
 }
 
 export type Effect = (
@@ -18,9 +22,11 @@ export interface ModelType {
   state: StateType;
   effects: {
     submit: Effect;
+    getCapcha: Effect;
   };
   reducers: {
     registerHandle: Reducer<StateType>;
+    errorsHandle: Reducer<StateType>;
   };
 }
 
@@ -28,24 +34,47 @@ const Model: ModelType = {
   namespace: 'userAndregister',
 
   state: {
-    status: undefined,
+    statusCode: undefined,
+    msg: '',
+    data: '',
+    errors: undefined,
   },
 
   effects: {
     *submit({ payload }, { call, put }) {
-      const response = yield call(fakeRegister, payload);
-      yield put({
-        type: 'registerHandle',
-        payload: response,
-      });
+      try {
+        const response = yield call(fakeRegister, payload);
+
+        yield put({
+          type: 'registerHandle',
+          payload: response,
+        });
+      } catch (error) {
+        yield put({
+          type: 'errorsHandle',
+          payload: { error: error.data },
+        });
+      }
+    },
+    // 获取验证码
+    *getCapcha({ payload }, { call, put }) {
+      yield call(fackCapcha, payload);
     },
   },
 
   reducers: {
     registerHandle(state, { payload }) {
+      console.log('payload', payload);
       return {
         ...state,
-        status: payload.status,
+        errors: {},
+        ...payload,
+      };
+    },
+    errorsHandle(state, { payload }) {
+      return {
+        ...state,
+        ...payload,
       };
     },
   },

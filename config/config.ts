@@ -105,7 +105,7 @@ export default {
           name: 'register',
           icon: 'smile',
           path: '/user/register',
-          component: './user/register',
+          component: './user/register/new',
         },
       ],
     },
@@ -196,13 +196,11 @@ export default {
     basePath: '/',
   },
   chainWebpack: webpackPlugin,
-  /*
   proxy: {
-    '/server/api/': {
-      target: 'https://preview.pro.ant.design/',
+    '/api': {
+      target: 'http://localhost:7001',
       changeOrigin: true,
-      pathRewrite: { '^/server': '' },
+      // pathRewrite: { '^/api': '' },
     },
   },
-  */
 } as IConfig;

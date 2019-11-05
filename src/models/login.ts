@@ -2,15 +2,19 @@ import { Reducer } from 'redux';
 import { routerRedux } from 'dva/router';
 import { Effect } from 'dva';
 import { stringify } from 'querystring';
+import { message } from 'antd';
 
 import { fakeAccountLogin, getFakeCaptcha } from '@/services/login';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
+import { setToken, removeToken } from '@/utils/token';
 
 export interface StateType {
-  status?: 'ok' | 'error';
   type?: string;
   currentAuthority?: 'user' | 'guest' | 'admin';
+  msg?: any;
+  data?: any;
+  statusCode?: any;
 }
 
 export interface LoginModelType {
@@ -23,25 +27,27 @@ export interface LoginModelType {
   };
   reducers: {
     changeLoginStatus: Reducer<StateType>;
+    errorsHandle: Reducer<StateType>;
   };
 }
 
 const Model: LoginModelType = {
   namespace: 'login',
 
-  state: {
-    status: undefined,
-  },
+  state: {},
 
   effects: {
     *login({ payload }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
-      yield put({
-        type: 'changeLoginStatus',
-        payload: response,
-      });
+
       // Login successfully
-      if (response.status === 'ok') {
+      if (response.statusCode === 200) {
+        yield put({
+          type: 'changeLoginStatus',
+          payload: response,
+        });
+        // console.log('response.data.accessToken', response.data.accessToken);
+        setToken(response.data.accessToken);
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params as { redirect: string };
@@ -59,12 +65,20 @@ const Model: LoginModelType = {
         }
         yield put(routerRedux.replace(redirect || '/'));
       }
+      if (response.statusCode === 500) {
+        message.error(response.msg);
+        yield put({
+          type: 'errorsHandle',
+          payload: response,
+        });
+      }
     },
 
     *getCaptcha({ payload }, { call }) {
       yield call(getFakeCaptcha, payload);
     },
     *logout(_, { put }) {
+      removeToken();
       const { redirect } = getPageQuery();
       // redirect
       if (window.location.pathname !== '/user/login' && !redirect) {
@@ -85,8 +99,14 @@ const Model: LoginModelType = {
       setAuthority(payload.currentAuthority);
       return {
         ...state,
-        status: payload.status,
+        ...payload,
         type: payload.type,
+      };
+    },
+    errorsHandle(state, { payload }) {
+      return {
+        ...state,
+        ...payload,
       };
     },
   },
