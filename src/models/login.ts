@@ -46,10 +46,12 @@ const Model: LoginModelType = {
           type: 'changeLoginStatus',
           payload: response,
         });
-        // console.log('response.data.accessToken', response.data.accessToken);
         setToken(response.data.accessToken);
         const urlParams = new URL(window.location.href);
+        console.log('urlParams = new URL(window.location.href)', urlParams);
+
         const params = getPageQuery();
+        console.log('params--', params);
         let { redirect } = params as { redirect: string };
         if (redirect) {
           const redirectUrlParams = new URL(redirect);

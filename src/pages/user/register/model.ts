@@ -2,6 +2,7 @@ import { AnyAction, Reducer } from 'redux';
 
 import { EffectsCommandMap } from 'dva';
 import { fakeRegister, fackCapcha } from './service';
+import { setToken } from '@/utils/token';
 
 export interface StateType {
   status?: 'ok' | 'error';
@@ -44,11 +45,13 @@ const Model: ModelType = {
     *submit({ payload }, { call, put }) {
       try {
         const response = yield call(fakeRegister, payload);
-
         yield put({
           type: 'registerHandle',
           payload: response,
         });
+        if (response.statusCode === 200) {
+          setToken(response.data.accessToken);
+        }
       } catch (error) {
         yield put({
           type: 'errorsHandle',

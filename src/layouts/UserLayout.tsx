@@ -1,4 +1,5 @@
 import { DefaultFooter, MenuDataItem, getMenuData, getPageTitle } from '@ant-design/pro-layout';
+import { Icon } from 'antd';
 import DocumentTitle from 'react-document-title';
 import Link from 'umi/link';
 import React from 'react';
@@ -52,7 +53,28 @@ const UserLayout: React.SFC<UserLayoutProps> = props => {
           </div>
           {children}
         </div>
-        <DefaultFooter />
+        <DefaultFooter
+          copyright=" 2019 songten@icloud.com"
+          links={[
+            {
+              key: 'AU-admin',
+              title: 'AU-admin-typescript',
+              href: 'https://github.com/songtianen/antd-typescript-admin',
+              blankTarget: true,
+            },
+            {
+              key: 'github',
+              title: <Icon type="github" />,
+              href: 'https://github.com/songtianen',
+              blankTarget: true,
+            }, // {
+            //   key: 'Ant Design',
+            //   title: 'Ant Design',
+            //   href: 'https://ant.design',
+            //   blankTarget: true,
+            // },
+          ]}
+        />
       </div>
     </DocumentTitle>
   );

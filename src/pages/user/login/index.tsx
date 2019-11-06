@@ -36,13 +36,13 @@ class Login extends Component<LoginProps, LoginState> {
     autoLogin: true,
   };
 
-  componentDidMount() {
-    if (getToken()) {
-      router.push({
-        pathname: '/',
-      });
-    }
-  }
+  // componentDidMount() {
+  //   if (getToken()) {
+  //     router.push({
+  //       pathname: '/',
+  //     });
+  //   }
+  // }
   changeAutoLogin = (e: CheckboxChangeEvent) => {
     this.setState({
       autoLogin: e.target.checked,
