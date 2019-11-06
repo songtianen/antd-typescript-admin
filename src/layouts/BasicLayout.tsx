@@ -101,6 +101,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
 
   useEffect(() => {
     if (dispatch) {
+      // 获取用户信息
       dispatch({
         type: 'user/fetchCurrent',
       });
