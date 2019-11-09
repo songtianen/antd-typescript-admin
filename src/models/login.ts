@@ -1,5 +1,7 @@
 import { Reducer } from 'redux';
 import { routerRedux } from 'dva/router';
+import router from 'umi/router';
+
 import { Effect } from 'dva';
 import { stringify } from 'querystring';
 import { message } from 'antd';
@@ -48,10 +50,10 @@ const Model: LoginModelType = {
         });
         setToken(response.data.accessToken);
         const urlParams = new URL(window.location.href);
-        console.log('urlParams = new URL(window.location.href)', urlParams);
+        // console.log('urlParams = new URL(window.location.href)', urlParams);
 
         const params = getPageQuery();
-        console.log('params--', params);
+        // console.log('params--', params);
         let { redirect } = params as { redirect: string };
         if (redirect) {
           const redirectUrlParams = new URL(redirect);
@@ -66,6 +68,7 @@ const Model: LoginModelType = {
           }
         }
         yield put(routerRedux.replace(redirect || '/'));
+        window.location.reload();
       }
       if (response.statusCode === 500) {
         message.error(response.msg);

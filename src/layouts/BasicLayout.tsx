@@ -18,7 +18,9 @@ import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import { ConnectState } from '@/models/connect';
 import { isAntDesignPro } from '@/utils/utils';
+import { getToken } from '@/utils/token';
 import logo from '../assets/logo.jpg';
+import router from 'umi/router';
 
 export interface BasicLayoutProps extends ProLayoutProps {
   breadcrumbNameMap: {
@@ -100,8 +102,11 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
    */
 
   useEffect(() => {
+    console.log('useEffect');
     if (dispatch) {
       // 获取用户信息
+      console.log('dispatch');
+
       dispatch({
         type: 'user/fetchCurrent',
       });

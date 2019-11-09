@@ -2,7 +2,7 @@
  * request 网络请求工具
  * 更详细的 api 文档: https://github.com/umijs/umi-request
  */
-import { extend } from 'umi-request';
+import { extend, RequestOptionsInit } from 'umi-request';
 import { notification } from 'antd';
 import { getToken } from './token';
 
@@ -29,21 +29,33 @@ const codeMessage = {
  */
 const errorHandler = (error: { response: Response }): Response => {
   const { response } = error;
-  if (response && response.status) {
-    const errorText = codeMessage[response.status] || response.statusText;
-    const { status, url } = response;
+  const { status, url, statusText } = response;
 
+  if (response && status >= 200 && status < 300) {
+    return response;
+  }
+
+  const errorText = codeMessage[status] || statusText;
+
+  notification.error({
+    message: `请求错误 ${status}: ${url}`,
+    description: errorText,
+  });
+
+  if (status === 401) {
     notification.error({
-      message: `请求错误 ${status}: ${url}`,
-      description: errorText,
+      message: '未登录或登录已过期，请重新登录。',
     });
-  } else if (!response) {
-    notification.error({
-      description: '您的网络发生异常，无法连接服务器',
-      message: '网络异常',
+
+    (<any>window).g_app._store.dispatch({
+      type: 'login/logout',
     });
   }
-  return response;
+
+  const myError: any = new Error(errorText);
+  myError.name = response.status;
+  myError.response = response;
+  throw error;
 };
 
 /**
@@ -59,5 +71,14 @@ const request = extend({
     Authorization: `Bearer ${getToken()}`,
   },
 });
+const myRequest = (url: string, options: RequestOptionsInit | undefined = {}) => {
+  return request(url, {
+    ...options,
+    headers: {
+      ...options!.headers,
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+};
 
-export default request;
+export default myRequest;
