@@ -68,7 +68,7 @@ const Model: LoginModelType = {
           }
         }
         yield put(routerRedux.replace(redirect || '/'));
-        window.location.reload();
+        // window.location.reload();// 刷新浏览器窗口
       }
       if (response.statusCode === 500) {
         message.error(response.msg);
@@ -101,7 +101,8 @@ const Model: LoginModelType = {
 
   reducers: {
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.currentAuthority);
+      console.log('登陆的model', payload);
+      setAuthority(payload.data.currentAuthority);
       return {
         ...state,
         ...payload,

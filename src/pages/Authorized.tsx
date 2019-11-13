@@ -42,7 +42,8 @@ const AuthComponent: React.FC<AuthComponentProps> = ({
 }) => {
   const { currentUser } = user;
   const { routes = [] } = route;
-  const isLogin = currentUser && currentUser.name;
+  const isLogin = currentUser && currentUser.userName;
+  console.log('验证路由', user);
   return (
     <Authorized
       authority={getRouteAuthority(location.pathname, routes) || ''}

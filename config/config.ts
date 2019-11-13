@@ -116,7 +116,6 @@ export default {
         {
           path: '/',
           component: '../layouts/BasicLayout',
-          authority: ['admin', 'user'],
           routes: [
             {
               path: '/',
@@ -127,12 +126,16 @@ export default {
               name: 'welcome',
               icon: 'smile',
               component: './Welcome',
+              Routes: ['src/pages/Authorized'], // 权限组件
+              authority: ['admin', 'gust'],
             },
             {
               name: 'list',
               icon: 'smile',
               path: '/list/basic/list',
               component: './list/basic/list',
+              Routes: ['src/pages/Authorized'], // 权限组件
+              authority: ['admin', 'user', 'gust'],
             },
             {
               component: './404',

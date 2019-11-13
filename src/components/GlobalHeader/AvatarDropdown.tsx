@@ -32,7 +32,7 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
     router.push(`/account/${key}`);
   };
   componentDidMount() {
-    console.log('个人中心组件', this.props);
+    // console.log('个人中心组件', this.props);
   }
 
   render(): React.ReactNode {
