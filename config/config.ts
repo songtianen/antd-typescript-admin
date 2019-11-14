@@ -126,16 +126,25 @@ export default {
               name: 'welcome',
               icon: 'smile',
               component: './Welcome',
-              Routes: ['src/pages/Authorized'], // 权限组件
-              authority: ['admin', 'gust'],
+              // Routes: ['src/pages/Authorized'],
+              // 权限组件
+              // authority: ['admin', 'gust'],
             },
             {
-              name: 'list',
-              icon: 'smile',
-              path: '/list/basic/list',
-              component: './list/basic/list',
-              Routes: ['src/pages/Authorized'], // 权限组件
+              name: '内容管理',
+              icon: 'table',
+              path: '/admin',
+              Routes: ['src/pages/Authorized'],
+              // 权限组件
               authority: ['admin', 'user', 'gust'],
+              routes: [
+                {
+                  name: '视频',
+                  icon: 'table',
+                  path: '/admin/movies',
+                  component: './admin/movies/list',
+                },
+              ],
             },
             {
               component: './404',
@@ -202,8 +211,7 @@ export default {
   proxy: {
     '/api': {
       target: 'http://localhost:7001',
-      changeOrigin: true,
-      // pathRewrite: { '^/api': '' },
+      changeOrigin: true, // pathRewrite: { '^/api': '' },
     },
   },
 } as IConfig;

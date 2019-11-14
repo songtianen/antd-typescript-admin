@@ -111,6 +111,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         type: 'settings/getSetting',
       });
     }
+    // 权限不能刷新的问题
     reloadAuthorized();
   }, []);
   /**
